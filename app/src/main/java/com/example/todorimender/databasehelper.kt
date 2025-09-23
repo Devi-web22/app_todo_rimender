@@ -118,4 +118,6 @@ class databasehelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = writableDatabase
         return db.delete(TABLE_TODOS, "$COLUMN_TODO_ID = ?", arrayOf(todoId.toString()))
     }
+
+
 }
