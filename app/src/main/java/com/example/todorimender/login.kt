@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-
 class login : AppCompatActivity() {
 
     private lateinit var dbHelper: databasehelper
@@ -20,14 +19,13 @@ class login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Inisialisasi
         dbHelper = databasehelper(this)
         edtUsername = findViewById(R.id.edtUsername)
         edtPassword = findViewById(R.id.edtPassword)
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
 
-        // Tombol Login
+
         btnLogin.setOnClickListener {
             val username = edtUsername.text.toString().trim()
             val password = edtPassword.text.toString().trim()
@@ -39,7 +37,6 @@ class login : AppCompatActivity() {
                 if (userId != null) {
                     Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show()
 
-                    // Simpan userId dan lanjut ke halaman utama
                     val intent = Intent(this, MainActivity::class.java)
                     intent.putExtra("USER_ID", userId)
                     startActivity(intent)
@@ -50,21 +47,10 @@ class login : AppCompatActivity() {
             }
         }
 
-
+        // Tombol Register → pindah ke halaman RegisterActivity
         btnRegister.setOnClickListener {
-            val username = edtUsername.text.toString().trim()
-            val password = edtPassword.text.toString().trim()
-
-            if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Isi semua field", Toast.LENGTH_SHORT).show()
-            } else {
-                val success = dbHelper.registerUser(username, password)
-                if (success) {
-                    Toast.makeText(this, "Registrasi berhasil, silakan login", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Username sudah terdaftar", Toast.LENGTH_SHORT).show()
-                }
-            }
+            val intent = Intent(this, register::class.java)
+            startActivity(intent)
         }
     }
 }

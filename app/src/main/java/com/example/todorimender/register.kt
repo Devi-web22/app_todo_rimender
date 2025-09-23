@@ -46,7 +46,7 @@ class register : AppCompatActivity() {
             }
         }
 
-        // Balik ke login
+
         btnBackToLogin.setOnClickListener {
             startActivity(Intent(this, login::class.java))
             finish()
