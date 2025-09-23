@@ -20,10 +20,10 @@ class splash_screen : AppCompatActivity() {
             val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
             if (isLoggedIn) {
-                // Jika sudah login, langsung ke MainActivity
+
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
-                // Jika belum login, arahkan ke LoginActivity
+
                 startActivity(Intent(this, login::class.java))
             }
 

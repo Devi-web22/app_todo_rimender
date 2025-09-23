@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    android:elevation="4dp"
-    android:radius="12dp"
-    android:backgroundTint="@android:color/white">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
+        android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- Bagian teks (judul + deskripsi) -->
+        <!-- Judul & Deskripsi -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,19 +26,18 @@
                 android:id="@+id/tvTodoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Judul Todo"
+                android:text="Judul Tugas"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="#000000"/>
 
             <TextView
                 android:id="@+id/tvTodoDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Deskripsi Todo"
+                android:text="Deskripsi tugas"
                 android:textSize="14sp"
-                android:textColor="#555555"
-                android:layout_marginTop="4dp"/>
+                android:textColor="#666666"/>
         </LinearLayout>
 
         <!-- Tombol Edit -->
@@ -49,7 +48,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_edit"
             android:contentDescription="Edit Todo"
-            android:tint="@color/black"/>
+            android:tint="@android:color/black"/>
 
         <!-- Tombol Hapus -->
         <ImageButton
@@ -59,6 +58,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="Delete Todo"
-            android:tint="@color/black"/>
+            android:tint="@android:color/black"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

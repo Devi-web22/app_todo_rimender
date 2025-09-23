@@ -4,6 +4,7 @@ import android.database.Cursor
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,44 +23,55 @@ class MainActivity : AppCompatActivity() {
     private lateinit var edtTitle: EditText
     private lateinit var edtDesc: EditText
 
-    // variabel untuk menandai apakah sedang edit
+    private lateinit var tvStudentName: TextView
+    private lateinit var tvClassInfo: TextView
+
+    // untuk mode edit
     private var editingTodoId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // database
         dbHelper = databasehelper(this)
         userId = intent.getIntExtra("USER_ID", -1)
 
+        // view binding manual
         recyclerView = findViewById(R.id.recyclerViewTodos)
         btnAddTodo = findViewById(R.id.btnAddTodo)
         edtTitle = findViewById(R.id.edtTodoTitle)
         edtDesc = findViewById(R.id.edtTodoDesc)
+        tvStudentName = findViewById(R.id.tvStudentName)
+        tvClassInfo = findViewById(R.id.tvClassInfo)
 
+        // header dummy
+        tvStudentName.text = "Halo, Budi!"
+        tvClassInfo.text = "Kelas XI IPA 2"
+
+        // RecyclerView setup
         recyclerView.layoutManager = LinearLayoutManager(this)
-
         adapter = todoAdapter(
             this,
             todoList,
             onEdit = { todo ->
-                // Isi kembali ke EditText untuk update
                 edtTitle.setText(todo.title)
                 edtDesc.setText(todo.desc)
                 editingTodoId = todo.id
-                btnAddTodo.text = "Update Todo"
+                btnAddTodo.text = "Update Tugas"
             },
             onDelete = { todo ->
                 dbHelper.deleteTodo(todo.id)
-                Toast.makeText(this, "Todo dihapus", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Tugas dihapus", Toast.LENGTH_SHORT).show()
                 loadTodos()
             }
         )
-
         recyclerView.adapter = adapter
 
+        // load awal
         loadTodos()
 
+        // tombol tambah/update
         btnAddTodo.setOnClickListener {
             val title = edtTitle.text.toString().trim()
             val desc = edtDesc.text.toString().trim()
@@ -68,17 +80,14 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Isi judul & deskripsi", Toast.LENGTH_SHORT).show()
             } else {
                 if (editingTodoId != null) {
-                    // mode update
                     dbHelper.updateTodo(editingTodoId!!, title, desc)
-                    Toast.makeText(this, "Todo diperbarui", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Tugas diperbarui", Toast.LENGTH_SHORT).show()
                     editingTodoId = null
-                    btnAddTodo.text = "Tambah Todo"
+                    btnAddTodo.text = "Tambah"
                 } else {
-                    // mode tambah
                     dbHelper.addTodo(title, desc, userId)
-                    Toast.makeText(this, "Todo ditambahkan", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Tugas ditambahkan", Toast.LENGTH_SHORT).show()
                 }
-
                 edtTitle.text.clear()
                 edtDesc.text.clear()
                 loadTodos()

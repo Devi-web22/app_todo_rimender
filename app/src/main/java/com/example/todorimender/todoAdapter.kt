@@ -41,7 +41,6 @@ class todoAdapter(
             onEdit(todo)
         }
 
-
         holder.btnDelete.setOnClickListener {
             playSound()
             onDelete(todo)
@@ -51,7 +50,9 @@ class todoAdapter(
     override fun getItemCount(): Int = todos.size
 
     private fun playSound() {
+        // create + release setelah selesai supaya tidak leak
         val mp = MediaPlayer.create(context, android.provider.Settings.System.DEFAULT_NOTIFICATION_URI)
+        mp.setOnCompletionListener { player -> player.release() }
         mp.start()
     }
 }

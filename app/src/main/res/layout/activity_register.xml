@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@drawable/background">
 
     <EditText
         android:id="@+id/edtRegUsername"
@@ -13,7 +14,9 @@
         android:layout_height="wrap_content"
         android:hint="@string/username"
         android:inputType="textPersonName"
-        android:layout_marginBottom="12dp"/>
+        android:textColorHint="#3F51B5"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="#0016AB"/>
 
     <EditText
         android:id="@+id/edtRegPassword"
@@ -21,19 +24,23 @@
         android:layout_height="wrap_content"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:backgroundTint="#0016AB"
+        android:textColorHint="#3F51B5"
         android:layout_marginBottom="20dp"/>
 
     <Button
         android:id="@+id/btnRegisterUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/register"/>
+        android:text="@string/register"
+        android:backgroundTint="#0016AB"/>
 
     <Button
         android:id="@+id/btnBackToLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/back_to_login"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#0016AB"/>
 
 </LinearLayout>
