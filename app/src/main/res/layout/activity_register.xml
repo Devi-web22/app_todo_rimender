@@ -8,7 +8,7 @@
     android:gravity="center">
 
     <EditText
-        android:id="@+id/edtUsername"
+        android:id="@+id/edtRegUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/username"
@@ -16,7 +16,7 @@
         android:layout_marginBottom="12dp"/>
 
     <EditText
-        android:id="@+id/edtPassword"
+        android:id="@+id/edtRegPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"
@@ -24,16 +24,16 @@
         android:layout_marginBottom="20dp"/>
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnRegisterUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login"/>
+        android:text="@string/register"/>
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnBackToLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/register"
+        android:text="@string/back_to_login"
         android:layout_marginTop="12dp"/>
 
 </LinearLayout>
