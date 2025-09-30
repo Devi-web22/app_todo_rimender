@@ -2,13 +2,13 @@ package com.example.todorimender
 
 import android.database.Cursor
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private val todoList = mutableListOf<todoAdapter.Todo>()
+    private val fullTodoList = mutableListOf<todoAdapter.Todo>()
     private lateinit var adapter: todoAdapter
 
     private lateinit var btnAddTodo: Button
@@ -25,29 +26,33 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tvStudentName: TextView
     private lateinit var tvClassInfo: TextView
+    private lateinit var tvCurrentDate: TextView
+    private lateinit var searchView: SearchView
 
-    // untuk mode edit
+    // Untuk mode edit
     private var editingTodoId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // database
+        // Inisialisasi DB dan user ID
         dbHelper = databasehelper(this)
         userId = intent.getIntExtra("USER_ID", -1)
 
-        // view binding manual
+        // View Binding
         recyclerView = findViewById(R.id.recyclerViewTodos)
         btnAddTodo = findViewById(R.id.btnAddTodo)
         edtTitle = findViewById(R.id.edtTodoTitle)
         edtDesc = findViewById(R.id.edtTodoDesc)
         tvStudentName = findViewById(R.id.tvStudentName)
         tvClassInfo = findViewById(R.id.tvClassInfo)
+        tvCurrentDate = findViewById(R.id.tvCurrentDate)
+        searchView = findViewById(R.id.searchView)
 
-        // header dummy
-        tvStudentName.text = "Halo, Budi!"
-        tvClassInfo.text = "Kelas XI IPA 2"
+        // Tampilkan tanggal otomatis
+        val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).format(Date())
+        tvCurrentDate.text = currentDate
 
         // RecyclerView setup
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -68,10 +73,10 @@ class MainActivity : AppCompatActivity() {
         )
         recyclerView.adapter = adapter
 
-        // load awal
+        // Load data awal
         loadTodos()
 
-        // tombol tambah/update
+        // Tambah atau update tugas
         btnAddTodo.setOnClickListener {
             val title = edtTitle.text.toString().trim()
             val desc = edtDesc.text.toString().trim()
@@ -93,22 +98,46 @@ class MainActivity : AppCompatActivity() {
                 loadTodos()
             }
         }
+
+        // Fitur Pencarian
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterTodos(newText.orEmpty())
+                return true
+            }
+        })
     }
 
     private fun loadTodos() {
         todoList.clear()
-        val cursor: Cursor = dbHelper.getTodosByUser(userId)
+        fullTodoList.clear()
 
+        val cursor: Cursor = dbHelper.getTodosByUser(userId)
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
                 val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
                 val desc = cursor.getString(cursor.getColumnIndexOrThrow("description"))
-                todoList.add(todoAdapter.Todo(id, title, desc))
+                val todo = todoAdapter.Todo(id, title, desc)
+                todoList.add(todo)
+                fullTodoList.add(todo)
             } while (cursor.moveToNext())
         }
         cursor.close()
+        adapter.notifyDataSetChanged()
+    }
 
+    private fun filterTodos(query: String) {
+        val filtered = fullTodoList.filter {
+            it.title.contains(query, ignoreCase = true) || it.desc.contains(query, ignoreCase = true)
+        }
+
+        todoList.clear()
+        todoList.addAll(filtered)
         adapter.notifyDataSetChanged()
     }
 }

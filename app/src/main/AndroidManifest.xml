@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoRimender">
         <activity
+            android:name=".detail"
+            android:exported="false" />
+        <activity
             android:name=".register"
             android:exported="false" />
         <activity

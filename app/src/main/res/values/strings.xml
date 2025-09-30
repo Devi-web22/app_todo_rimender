@@ -8,4 +8,10 @@
     <string name="log">Login</string>
     <string name="register">Register</string>
     <string name="back_to_login">Back to Login</string>
+    <string name="halo_selamat_datang">Halo, Selamat datang!</string>
+    <string name="tulis_tugas_anda">Tulis tugas anda</string>
+    <string name="_23_september_2025">📅 23 September 2025</string>
+    <string name="judul_tugas">Judul tugas</string>
+    <string name="deskripsi">Deskripsi</string>
+    <string name="tambah">Tambah</string>
 </resources>
