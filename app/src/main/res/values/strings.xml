@@ -14,4 +14,6 @@
     <string name="judul_tugas">Judul tugas</string>
     <string name="deskripsi">Deskripsi</string>
     <string name="tambah">Tambah</string>
+    <string name="tulis_tugas_anda_di_bawah">Tulis tugas anda di bawah</string>
+    <string name="tanggal_sekarang">Tanggal sekarang</string>
 </resources>

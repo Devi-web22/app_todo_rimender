@@ -14,8 +14,6 @@ import android.app.PendingIntent
 import android.content.Intent
 
 
-
-
 class detail : AppCompatActivity() {
 
     private lateinit var tvTitle: TextView

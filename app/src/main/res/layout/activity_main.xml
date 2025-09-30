@@ -29,7 +29,7 @@
                     android:id="@+id/tvStudentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Halo, Selamat Datang"
+                    android:text="@string/halo_selamat_datang"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"/>
@@ -38,7 +38,7 @@
                     android:id="@+id/tvClassInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tulis tugas anda di bawah"
+                    android:text="@string/tulis_tugas_anda_di_bawah"
                     android:textSize="14sp"
                     android:textColor="@android:color/white"
                     android:layout_marginTop="4dp"/>
@@ -47,7 +47,7 @@
                     android:id="@+id/tvCurrentDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tanggal sekarang"
+                    android:text="@string/tanggal_sekarang"
                     android:textSize="14sp"
                     android:textColor="@android:color/white"
                     android:layout_marginTop="16dp"/>
