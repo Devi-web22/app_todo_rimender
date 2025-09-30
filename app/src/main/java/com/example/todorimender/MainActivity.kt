@@ -1,5 +1,6 @@
 package com.example.todorimender
 
+import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.widget.*
@@ -69,6 +70,13 @@ class MainActivity : AppCompatActivity() {
                 dbHelper.deleteTodo(todo.id)
                 Toast.makeText(this, "Tugas dihapus", Toast.LENGTH_SHORT).show()
                 loadTodos()
+            },
+            onClick = { todo ->
+                // Buka halaman detail dan kirim data
+                val intent = Intent(this, detail::class.java)
+                intent.putExtra("title", todo.title)
+                intent.putExtra("description", todo.desc)
+                startActivity(intent)
             }
         )
         recyclerView.adapter = adapter

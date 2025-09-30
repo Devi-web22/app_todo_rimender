@@ -13,7 +13,8 @@ class todoAdapter(
     private val context: Context,
     private val todos: MutableList<Todo>,
     private val onEdit: (Todo) -> Unit,
-    private val onDelete: (Todo) -> Unit
+    private val onDelete: (Todo) -> Unit,
+    private val onClick: (Todo) -> Unit
 ) : RecyclerView.Adapter<todoAdapter.TodoViewHolder>() {
 
     data class Todo(val id: Int, val title: String, val desc: String)
@@ -44,6 +45,12 @@ class todoAdapter(
         holder.btnDelete.setOnClickListener {
             playSound()
             onDelete(todo)
+        }
+
+        // Klik item untuk buka detail
+        holder.itemView.setOnClickListener {
+            playSound()
+            onClick(todo)
         }
     }
 
