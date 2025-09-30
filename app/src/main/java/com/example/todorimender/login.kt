@@ -47,6 +47,7 @@ class login : AppCompatActivity() {
             }
         }
 
+
         // Tombol Register → pindah ke halaman RegisterActivity
         btnRegister.setOnClickListener {
             val intent = Intent(this, register::class.java)
@@ -54,3 +55,5 @@ class login : AppCompatActivity() {
         }
     }
 }
+
+

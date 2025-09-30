@@ -139,6 +139,8 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
+
+
     private fun filterTodos(query: String) {
         val filtered = fullTodoList.filter {
             it.title.contains(query, ignoreCase = true) || it.desc.contains(query, ignoreCase = true)
@@ -149,3 +151,5 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 }
+
+
