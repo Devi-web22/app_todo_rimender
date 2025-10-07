@@ -18,7 +18,7 @@ class ReminderReceiver : BroadcastReceiver() {
         val channelId = "tugas_channel"
         val channelName = "Tugas Reminder"
 
-        // Buat notification channel untuk Android O+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(channelId, channelName, importance).apply {
@@ -43,13 +43,13 @@ class ReminderReceiver : BroadcastReceiver() {
         )
 
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Ganti dengan icon notifikasi kamu
+            .setSmallIcon(R.drawable.bell)
             .setContentTitle("Pengingat Tugas: $title")
             .setContentText(desc)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .setDefaults(NotificationCompat.DEFAULT_ALL) // suara, getar, lampu
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
 
         with(NotificationManagerCompat.from(context)) {
             notify(System.currentTimeMillis().toInt(), builder.build())
