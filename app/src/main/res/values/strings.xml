@@ -16,4 +16,5 @@
     <string name="tambah">Tambah</string>
     <string name="tulis_tugas_anda_di_bawah">Tulis tugas anda di bawah</string>
     <string name="tanggal_sekarang">Tanggal sekarang</string>
+    <string name="pilih_tanggal_waktu_deadline"><![CDATA[Pilih Tanggal & Waktu Deadline]]></string>
 </resources>

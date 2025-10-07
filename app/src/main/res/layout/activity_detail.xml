@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +21,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="24dp"/>
 
-        <!-- Card for Detail -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,19 +73,19 @@
                     android:layout_marginBottom="12dp"/>
 
                 <Button
-                    android:id="@+id/btnPickDate"
+                    android:id="@+id/btnPickDateTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pilih Tanggal Deadline"
+                    android:text="@string/pilih_tanggal_waktu_deadline"
                     android:backgroundTint="#1976D2"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="16dp"/>
 
                 <Button
                     android:id="@+id/btnSetReminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Atur Pengingat Notifikasi"
-                    android:layout_marginTop="16dp"
                     android:backgroundTint="#388E3C"
                     android:textColor="@android:color/white"/>
 
