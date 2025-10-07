@@ -30,18 +30,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvCurrentDate: TextView
     private lateinit var searchView: SearchView
 
-    // Untuk mode edit
+    private lateinit var btnLogout: Button
+
+
     private var editingTodoId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inisialisasi DB dan user ID
+
         dbHelper = databasehelper(this)
         userId = intent.getIntExtra("USER_ID", -1)
 
-        // View Binding
+
         recyclerView = findViewById(R.id.recyclerViewTodos)
         btnAddTodo = findViewById(R.id.btnAddTodo)
         edtTitle = findViewById(R.id.edtTodoTitle)
@@ -50,12 +52,13 @@ class MainActivity : AppCompatActivity() {
         tvClassInfo = findViewById(R.id.tvClassInfo)
         tvCurrentDate = findViewById(R.id.tvCurrentDate)
         searchView = findViewById(R.id.searchView)
+        btnLogout = findViewById(R.id.btnLogout) // ⬅️ Tombol logout
 
-        // Tampilkan tanggal otomatis
+
         val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).format(Date())
         tvCurrentDate.text = currentDate
 
-        // RecyclerView setup
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = todoAdapter(
             this,
@@ -72,7 +75,6 @@ class MainActivity : AppCompatActivity() {
                 loadTodos()
             },
             onClick = { todo ->
-                // Buka halaman detail dan kirim data
                 val intent = Intent(this, detail::class.java)
                 intent.putExtra("title", todo.title)
                 intent.putExtra("description", todo.desc)
@@ -81,10 +83,10 @@ class MainActivity : AppCompatActivity() {
         )
         recyclerView.adapter = adapter
 
-        // Load data awal
+
         loadTodos()
 
-        // Tambah atau update tugas
+
         btnAddTodo.setOnClickListener {
             val title = edtTitle.text.toString().trim()
             val desc = edtDesc.text.toString().trim()
@@ -93,7 +95,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Isi judul & deskripsi", Toast.LENGTH_SHORT).show()
             } else {
                 if (editingTodoId != null) {
-                    dbHelper.updateTodo(editingTodoId!!, title, desc)
+                    dbHelper.updateTodo(
+                        editingTodoId!!, title, desc,
+                        deadline = TODO()
+                    )
                     Toast.makeText(this, "Tugas diperbarui", Toast.LENGTH_SHORT).show()
                     editingTodoId = null
                     btnAddTodo.text = "Tambah"
@@ -107,18 +112,46 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Fitur Pencarian
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
+            override fun onQueryTextSubmit(query: String?): Boolean = false
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 filterTodos(newText.orEmpty())
                 return true
             }
         })
+
+        btnAddTodo.setOnClickListener {
+            val title = edtTitle.text.toString().trim()
+            val desc = edtDesc.text.toString().trim()
+
+
+            val deadline = intent.getStringExtra("deadline") ?: "Tanpa deadline"
+
+            if (title.isEmpty() || desc.isEmpty()) {
+                Toast.makeText(this, "Isi judul & deskripsi", Toast.LENGTH_SHORT).show()
+            } else {
+                dbHelper.addTodo(title, desc, deadline, userId)
+                Toast.makeText(this, "Tugas ditambahkan", Toast.LENGTH_SHORT).show()
+                edtTitle.text.clear()
+                edtDesc.text.clear()
+                loadTodos()
+            }
+        }
+
+
+        btnLogout.setOnClickListener {
+
+            Toast.makeText(this, "Berhasil logout", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, login::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+
+        }
     }
+
 
     private fun loadTodos() {
         todoList.clear()
@@ -130,7 +163,10 @@ class MainActivity : AppCompatActivity() {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
                 val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
                 val desc = cursor.getString(cursor.getColumnIndexOrThrow("description"))
-                val todo = todoAdapter.Todo(id, title, desc)
+                val deadline =
+                    cursor.getString(cursor.getColumnIndexOrThrow("deadline")) ?: "Tanpa deadline"
+
+                val todo = todoAdapter.Todo(id, title, desc, deadline)
                 todoList.add(todo)
                 fullTodoList.add(todo)
             } while (cursor.moveToNext())
@@ -139,11 +175,14 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 
-
-
     private fun filterTodos(query: String) {
         val filtered = fullTodoList.filter {
-            it.title.contains(query, ignoreCase = true) || it.desc.contains(query, ignoreCase = true)
+            it.title.contains(query, ignoreCase = true) ||
+                    it.desc.contains(query, ignoreCase = true) ||
+                    it.deadline.contains(
+                        query,
+                        ignoreCase = true
+                    )
         }
 
         todoList.clear()

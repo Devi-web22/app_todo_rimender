@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class  todoAdapter(
+class todoAdapter(
     private val context: Context,
     private val todos: MutableList<Todo>,
     private val onEdit: (Todo) -> Unit,
@@ -17,11 +17,12 @@ class  todoAdapter(
     private val onClick: (Todo) -> Unit
 ) : RecyclerView.Adapter<todoAdapter.TodoViewHolder>() {
 
-    data class Todo(val id: Int, val title: String, val desc: String)
+    data class Todo(val id: Int, val title: String, val desc: String, val deadline: String)
 
     inner class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvTitle: TextView = itemView.findViewById(R.id.tvTodoTitle)
         val tvDesc: TextView = itemView.findViewById(R.id.tvTodoDesc)
+        val tvDeadline: TextView = itemView.findViewById(R.id.tvTodoDeadline) // harus ada di layout
         val btnEdit: ImageButton = itemView.findViewById(R.id.btnEditTodo)
         val btnDelete: ImageButton = itemView.findViewById(R.id.btnDeleteTodo)
     }
@@ -36,6 +37,7 @@ class  todoAdapter(
         val todo = todos[position]
         holder.tvTitle.text = todo.title
         holder.tvDesc.text = todo.desc
+        holder.tvDeadline.text = "Tenggat: ${todo.deadline}"
 
         holder.btnEdit.setOnClickListener {
             playSound()
@@ -47,7 +49,6 @@ class  todoAdapter(
             onDelete(todo)
         }
 
-        // Klik item untuk buka detail
         holder.itemView.setOnClickListener {
             playSound()
             onClick(todo)

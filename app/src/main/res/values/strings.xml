@@ -22,4 +22,6 @@
     <string name="Judul_tugas">Judul tugas</string>
     <string name="deskripsi_tugas">Deskripsi tugas</string>
     <string name="to_do_rimender">To Do Rimender</string>
+    <string name="logout">Logout</string>
+    <string name="tenggat_tanpa_deadline">Tenggat: Tanpa Deadline</string>
 </resources>

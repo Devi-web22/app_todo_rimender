@@ -15,7 +15,6 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- Judul & Deskripsi -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,9 +37,20 @@
                 android:text="@string/deskripsi_tugas"
                 android:textSize="14sp"
                 android:textColor="#666666"/>
+
+
+            <TextView
+                android:id="@+id/tvTodoDeadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tenggat_tanpa_deadline"
+                android:textSize="12sp"
+                android:textColor="#3F51B5"
+                android:layout_marginTop="4dp"/>
+
         </LinearLayout>
 
-        <!-- Tombol Edit -->
+
         <ImageButton
             android:id="@+id/btnEditTodo"
             android:layout_width="40dp"
@@ -48,9 +58,9 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_edit"
             android:contentDescription="@string/edit"
-            android:textColorHint="@color/hint_color"/>
+            app:tint="#666666" />
 
-        <!-- Tombol Hapus -->
+
         <ImageButton
             android:id="@+id/btnDeleteTodo"
             android:layout_width="40dp"
@@ -58,6 +68,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="@string/delete"
-            android:textColorHint="@color/hint_color"/>
+            app:tint="#666666" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

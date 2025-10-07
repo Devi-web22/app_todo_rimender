@@ -10,7 +10,8 @@ class databasehelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "todo_app.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
+
 
         // USER TABLE
         private const val TABLE_USERS = "users"
@@ -35,14 +36,16 @@ class databasehelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         """.trimIndent()
 
         val createTodosTable = """
-            CREATE TABLE $TABLE_TODOS (
-                $COLUMN_TODO_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMN_TODO_TITLE TEXT,
-                $COLUMN_TODO_DESC TEXT,
-                $COLUMN_TODO_USER_ID INTEGER,
-                FOREIGN KEY($COLUMN_TODO_USER_ID) REFERENCES $TABLE_USERS($COLUMN_USER_ID)
-            )
-        """.trimIndent()
+    CREATE TABLE $TABLE_TODOS (
+        $COLUMN_TODO_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        $COLUMN_TODO_TITLE TEXT,
+        $COLUMN_TODO_DESC TEXT,
+        deadline TEXT,                    -- Tambahkan ini
+        $COLUMN_TODO_USER_ID INTEGER,
+        FOREIGN KEY($COLUMN_TODO_USER_ID) REFERENCES $TABLE_USERS($COLUMN_USER_ID)
+    )
+""".trimIndent()
+
 
         db.execSQL(createUsersTable)
         db.execSQL(createTodosTable)
@@ -105,11 +108,12 @@ class databasehelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         )
     }
 
-    fun updateTodo(todoId: Int, title: String, description: String): Int {
+    fun updateTodo(todoId: Int, title: String, description: String, deadline: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_TODO_TITLE, title)
             put(COLUMN_TODO_DESC, description)
+            put("deadline", deadline)  // tambahkan deadline juga
         }
         return db.update(TABLE_TODOS, values, "$COLUMN_TODO_ID = ?", arrayOf(todoId.toString()))
     }
@@ -118,6 +122,18 @@ class databasehelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = writableDatabase
         return db.delete(TABLE_TODOS, "$COLUMN_TODO_ID = ?", arrayOf(todoId.toString()))
     }
+
+    fun addTodo(title: String, desc: String, deadline: String, userId: Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("title", title)
+            put("description", desc)
+            put("deadline", deadline)
+            put("user_id", userId)
+        }
+        return db.insert("todos", null, values)
+    }
+
 
 
 }

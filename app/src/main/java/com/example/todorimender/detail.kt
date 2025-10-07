@@ -23,6 +23,7 @@ class detail : AppCompatActivity() {
 
     private var deadlineCalendar = Calendar.getInstance()
     private var isDeadlineSet = false
+    private var selectedDeadline: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +58,12 @@ class detail : AppCompatActivity() {
             }
 
             setAlarm()
+
+            // Kirim deadline kembali ke activity sebelumnya
+            val intent = Intent()
+            intent.putExtra("deadline", selectedDeadline)
+            setResult(RESULT_OK, intent)
+            finish()
         }
     }
 
@@ -74,7 +81,7 @@ class detail : AppCompatActivity() {
             now.get(Calendar.MONTH),
             now.get(Calendar.DAY_OF_MONTH)
         )
-        datePicker.datePicker.minDate = now.timeInMillis // deadline tidak bisa di masa lalu
+        datePicker.datePicker.minDate = now.timeInMillis
         datePicker.show()
     }
 
@@ -100,7 +107,8 @@ class detail : AppCompatActivity() {
 
     private fun updateDeadlineText() {
         val format = SimpleDateFormat("dd MMMM yyyy HH:mm", Locale("id", "ID"))
-        tvDeadline.text = format.format(deadlineCalendar.time)
+        selectedDeadline = format.format(deadlineCalendar.time)  // simpan ke variabel selectedDeadline
+        tvDeadline.text = selectedDeadline
     }
 
     private fun setAlarm() {

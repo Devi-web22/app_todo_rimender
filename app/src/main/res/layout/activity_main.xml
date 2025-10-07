@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,44 +18,72 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Header -->
+            <!-- Header with logout button -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:background="#0D47A1"
-                android:padding="20dp">
+                android:padding="20dp"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/tvStudentName"
+                <!-- Texts on the left -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvStudentName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/halo_selamat_datang"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/tvClassInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tulis_tugas_anda_di_bawah"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="4dp"/>
+
+                    <TextView
+                        android:id="@+id/tvCurrentDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tanggal_sekarang"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="16dp"/>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/halo_selamat_datang"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
-
-                <TextView
-                    android:id="@+id/tvClassInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tulis_tugas_anda_di_bawah"
-                    android:textSize="14sp"
+                    android:text="Logout"
                     android:textColor="@android:color/white"
-                    android:layout_marginTop="4dp"/>
+                    android:backgroundTint="#D32F2F"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:elevation="4dp"
 
-                <TextView
-                    android:id="@+id/tvCurrentDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tanggal_sekarang"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/white"
-                    android:layout_marginTop="16dp"/>
+                    app:icon="@drawable/logout"
+                    app:iconTint="@android:color/white"
+                    app:iconGravity="textStart"
+                    app:iconPadding="6dp"
+                    app:cornerRadius="8dp" />
+
+
+
             </LinearLayout>
 
 
-            <!-- SearchView -->
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
@@ -66,7 +95,7 @@
                 android:padding="8dp"
                 android:queryHint="Cari tugas..." />
 
-            <!-- Form Input -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,4 +154,5 @@
         android:paddingBottom="16dp"
         android:clipToPadding="false"
         android:background="#F2F6FF"/>
+
 </LinearLayout>
