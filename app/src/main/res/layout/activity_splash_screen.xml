@@ -22,7 +22,7 @@
         android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="To-Do Reminder"
+        android:text="@string/to_do_rimender"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/white"

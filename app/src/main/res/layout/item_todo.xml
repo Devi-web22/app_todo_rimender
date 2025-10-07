@@ -26,7 +26,7 @@
                 android:id="@+id/tvTodoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Judul Tugas"
+                android:text="@string/judul_tugas"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#000000"/>
@@ -35,7 +35,7 @@
                 android:id="@+id/tvTodoDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Deskripsi tugas"
+                android:text="@string/deskripsi_tugas"
                 android:textSize="14sp"
                 android:textColor="#666666"/>
         </LinearLayout>
@@ -47,8 +47,8 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_edit"
-            android:contentDescription="Edit Todo"
-            android:tint="@android:color/black"/>
+            android:contentDescription="@string/edit"
+            android:textColorHint="@color/hint_color"/>
 
         <!-- Tombol Hapus -->
         <ImageButton
@@ -57,7 +57,7 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
-            android:contentDescription="Delete Todo"
-            android:tint="@android:color/black"/>
+            android:contentDescription="@string/delete"
+            android:textColorHint="@color/hint_color"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class todoAdapter(
+class  todoAdapter(
     private val context: Context,
     private val todos: MutableList<Todo>,
     private val onEdit: (Todo) -> Unit,
