@@ -1,5 +1,6 @@
 package com.example.todorimender
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,17 +10,20 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import android.app.PendingIntent
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
+import android.os.Build.VERSION
 
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val title = intent.getStringExtra("title") ?: "Tugas"
         val desc = intent.getStringExtra("description") ?: "Deskripsi tugas"
+        val todoId = intent.getIntExtra("todoId", 0)  // Ambil todoId
 
         val channelId = "tugas_channel"
         val channelName = "Tugas Reminder"
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(channelId, channelName, importance).apply {
                 description = "Channel pengingat tugas"
@@ -33,11 +37,12 @@ class ReminderReceiver : BroadcastReceiver() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("title", title)
             putExtra("description", desc)
+            putExtra("todoId", todoId)
         }
 
         val pendingIntent = PendingIntent.getActivity(
             context,
-            0,
+            todoId,
             detailIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -51,8 +56,15 @@ class ReminderReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
 
+
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return
+            }
+        }
+
         with(NotificationManagerCompat.from(context)) {
-            notify(System.currentTimeMillis().toInt(), builder.build())
+            notify(todoId, builder.build())
         }
     }
 }

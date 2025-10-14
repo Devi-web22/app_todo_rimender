@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 
 class login : AppCompatActivity() {
 
@@ -49,9 +50,9 @@ class login : AppCompatActivity() {
                     Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show()
 
 
-                    val editor = sharedPref.edit()
-                    editor.putInt("USER_ID", userId)
-                    editor.apply()
+                    sharedPref.edit {
+                        putInt("USER_ID", userId)
+                    }
 
 
                     val intent = Intent(this, MainActivity::class.java)
@@ -63,8 +64,8 @@ class login : AppCompatActivity() {
             }
         }
 
-        // Pindah ke RegisterActivity
-        btnRegister.setOnClickListener {
+
+        this.btnRegister.setOnClickListener {
             val intent = Intent(this, register::class.java)
             startActivity(intent)
         }

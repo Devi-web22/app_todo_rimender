@@ -1,16 +1,22 @@
 package com.example.todorimender
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.SearchView
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,23 +41,26 @@ class MainActivity : AppCompatActivity() {
 
     private var editingTodoId: Int? = null
 
+    companion object {
+        private const val REQUEST_CODE_DETAIL = 101
+        private const val REQUEST_NOTIFICATION_PERMISSION = 100
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE)
         userId = sharedPref.getInt("USER_ID", -1)
         if (userId == -1) {
-
-            val intent = Intent(this, login::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, login::class.java))
             finish()
             return
         }
 
-        dbHelper = databasehelper(this)
+        requestNotificationPermissionIfNeeded()
 
+        dbHelper = databasehelper(this)
 
         recyclerView = findViewById(R.id.recyclerViewTodos)
         btnAddTodo = findViewById(R.id.btnAddTodo)
@@ -63,10 +72,8 @@ class MainActivity : AppCompatActivity() {
         searchView = findViewById(R.id.searchView)
         btnLogout = findViewById(R.id.btnLogout)
 
-
         val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).format(Date())
         tvCurrentDate.text = currentDate
-
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = todoAdapter(
@@ -84,17 +91,17 @@ class MainActivity : AppCompatActivity() {
                 loadTodos()
             },
             onClick = { todo ->
-                val intent = Intent(this, detail::class.java)
-                intent.putExtra("title", todo.title)
-                intent.putExtra("description", todo.desc)
-                startActivity(intent)
+                val intent = Intent(this, detail::class.java).apply {
+                    putExtra("title", todo.title)
+                    putExtra("description", todo.desc)
+                    putExtra("todoId", todo.id)
+                }
+                startActivityForResult(intent, REQUEST_CODE_DETAIL)
             }
         )
         recyclerView.adapter = adapter
 
-
         loadTodos()
-
 
         btnAddTodo.setOnClickListener {
             val title = edtTitle.text.toString().trim()
@@ -120,27 +127,36 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
-
             override fun onQueryTextChange(newText: String?): Boolean {
                 filterTodos(newText.orEmpty())
                 return true
             }
         })
 
-
         btnLogout.setOnClickListener {
-
-            sharedPref.edit {clear()}
-
+            sharedPref.edit { clear() }
             Toast.makeText(this, "Berhasil logout", Toast.LENGTH_SHORT).show()
-
-            val intent = Intent(this, login::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            startActivity(Intent(this, login::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            })
             finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK) {
+            val updatedDeadline = data?.getStringExtra("deadline")
+            val updatedTodoId = data?.getIntExtra("todoId", -1) ?: -1
+
+            if (updatedDeadline != null && updatedTodoId != -1) {
+                val updatedRows = dbHelper.updateTodoDeadline(updatedTodoId, updatedDeadline)
+                Log.d("MainActivity", "Update deadline in DB: $updatedDeadline for todoId: $updatedTodoId, rows affected: $updatedRows")
+                loadTodos()
+                Toast.makeText(this, "Deadline diperbarui", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -154,8 +170,9 @@ class MainActivity : AppCompatActivity() {
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
                 val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
                 val desc = cursor.getString(cursor.getColumnIndexOrThrow("description"))
-                val deadline =
-                    cursor.getString(cursor.getColumnIndexOrThrow("deadline")) ?: "Tanpa deadline"
+                val deadline = cursor.getString(cursor.getColumnIndexOrThrow("deadline")) ?: "Tanpa deadline"
+
+                Log.d("MainActivity", "Loaded todo: id=$id, title=$title, deadline=$deadline")
 
                 val todo = todoAdapter.Todo(id, title, desc, deadline)
                 todoList.add(todo)
@@ -172,9 +189,37 @@ class MainActivity : AppCompatActivity() {
                     it.desc.contains(query, ignoreCase = true) ||
                     it.deadline.contains(query, ignoreCase = true)
         }
-
         todoList.clear()
         todoList.addAll(filtered)
         adapter.notifyDataSetChanged()
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_NOTIFICATION_PERMISSION
+                )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(this, "Izin notifikasi diberikan", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Izin notifikasi ditolak", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
