@@ -22,6 +22,7 @@
         android:hint="@string/username"
         android:inputType="textPersonName"
         android:textColorHint="#3F51B5"
+        android:textSize="20sp"
         android:layout_marginBottom="12dp"
         android:backgroundTint="#0016AB"/>
 
@@ -31,6 +32,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:textSize="20sp"
         android:backgroundTint="#0016AB"
         android:textColorHint="#3F51B5"
         android:layout_marginBottom="20dp"/>

@@ -24,4 +24,5 @@
     <string name="to_do_rimender">To Do Rimender</string>
     <string name="logout">Logout</string>
     <string name="tenggat_tanpa_deadline">Tenggat: Tanpa Deadline</string>
+    <string name="todo">TODO</string>
 </resources>

@@ -53,21 +53,21 @@
 
         <ImageButton
             android:id="@+id/btnEditTodo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_edit"
             android:contentDescription="@string/edit"
-            app:tint="#666666" />
+            app:tint="#03A9F4" />
 
 
         <ImageButton
             android:id="@+id/btnDeleteTodo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="@string/delete"
-            app:tint="#666666" />
+            app:tint="#0024D5" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
