@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.SearchView
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var btnLogout: Button
 
-
     private var editingTodoId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +40,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
+        val sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE)
+        userId = sharedPref.getInt("USER_ID", -1)
+        if (userId == -1) {
+
+            val intent = Intent(this, login::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+
         dbHelper = databasehelper(this)
-        userId = intent.getIntExtra("USER_ID", -1)
 
 
         recyclerView = findViewById(R.id.recyclerViewTodos)
@@ -52,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         tvClassInfo = findViewById(R.id.tvClassInfo)
         tvCurrentDate = findViewById(R.id.tvCurrentDate)
         searchView = findViewById(R.id.searchView)
-        btnLogout = findViewById(R.id.btnLogout) // ⬅️ Tombol logout
+        btnLogout = findViewById(R.id.btnLogout)
 
 
         val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).format(Date())
@@ -90,22 +99,21 @@ class MainActivity : AppCompatActivity() {
         btnAddTodo.setOnClickListener {
             val title = edtTitle.text.toString().trim()
             val desc = edtDesc.text.toString().trim()
+            val deadline = "Tanpa deadline"
 
             if (title.isEmpty() || desc.isEmpty()) {
                 Toast.makeText(this, "Isi judul & deskripsi", Toast.LENGTH_SHORT).show()
             } else {
                 if (editingTodoId != null) {
-                    dbHelper.updateTodo(
-                        editingTodoId!!, title, desc,
-                        deadline = TODO()
-                    )
+                    dbHelper.updateTodo(editingTodoId!!, title, desc, deadline)
                     Toast.makeText(this, "Tugas diperbarui", Toast.LENGTH_SHORT).show()
                     editingTodoId = null
                     btnAddTodo.text = "Tambah"
                 } else {
-                    dbHelper.addTodo(title, desc, userId)
+                    dbHelper.addTodo(title, desc, deadline, userId)
                     Toast.makeText(this, "Tugas ditambahkan", Toast.LENGTH_SHORT).show()
                 }
+
                 edtTitle.text.clear()
                 edtDesc.text.clear()
                 loadTodos()
@@ -122,36 +130,19 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        btnAddTodo.setOnClickListener {
-            val title = edtTitle.text.toString().trim()
-            val desc = edtDesc.text.toString().trim()
-
-
-            val deadline = intent.getStringExtra("deadline") ?: "Tanpa deadline"
-
-            if (title.isEmpty() || desc.isEmpty()) {
-                Toast.makeText(this, "Isi judul & deskripsi", Toast.LENGTH_SHORT).show()
-            } else {
-                dbHelper.addTodo(title, desc, deadline, userId)
-                Toast.makeText(this, "Tugas ditambahkan", Toast.LENGTH_SHORT).show()
-                edtTitle.text.clear()
-                edtDesc.text.clear()
-                loadTodos()
-            }
-        }
-
 
         btnLogout.setOnClickListener {
 
+            sharedPref.edit {clear()}
+
             Toast.makeText(this, "Berhasil logout", Toast.LENGTH_SHORT).show()
+
             val intent = Intent(this, login::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
-
         }
     }
-
 
     private fun loadTodos() {
         todoList.clear()
@@ -179,10 +170,7 @@ class MainActivity : AppCompatActivity() {
         val filtered = fullTodoList.filter {
             it.title.contains(query, ignoreCase = true) ||
                     it.desc.contains(query, ignoreCase = true) ||
-                    it.deadline.contains(
-                        query,
-                        ignoreCase = true
-                    )
+                    it.deadline.contains(query, ignoreCase = true)
         }
 
         todoList.clear()
@@ -190,5 +178,3 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
     }
 }
-
-

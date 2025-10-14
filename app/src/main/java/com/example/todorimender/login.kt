@@ -17,6 +17,18 @@ class login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val sharedPref = getSharedPreferences("UserSession", MODE_PRIVATE)
+        val userId = sharedPref.getInt("USER_ID", -1)
+        if (userId != -1) {
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_login)
 
         dbHelper = databasehelper(this)
@@ -24,7 +36,6 @@ class login : AppCompatActivity() {
         edtPassword = findViewById(R.id.edtPassword)
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
-
 
         btnLogin.setOnClickListener {
             val username = edtUsername.text.toString().trim()
@@ -37,8 +48,13 @@ class login : AppCompatActivity() {
                 if (userId != null) {
                     Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show()
 
+
+                    val editor = sharedPref.edit()
+                    editor.putInt("USER_ID", userId)
+                    editor.apply()
+
+
                     val intent = Intent(this, MainActivity::class.java)
-                    intent.putExtra("USER_ID", userId)
                     startActivity(intent)
                     finish()
                 } else {
@@ -47,13 +63,10 @@ class login : AppCompatActivity() {
             }
         }
 
-
-        // Tombol Register → pindah ke halaman RegisterActivity
+        // Pindah ke RegisterActivity
         btnRegister.setOnClickListener {
             val intent = Intent(this, register::class.java)
             startActivity(intent)
         }
     }
 }
-
-
