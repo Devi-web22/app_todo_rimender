@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="Detail Tugas"
             android:textSize="24sp"
-            android:textColor="#0D47A1"
+            android:textColor="#0F53BC"
             android:textStyle="bold"
             android:layout_marginBottom="24dp"/>
 
